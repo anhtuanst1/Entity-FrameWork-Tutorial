@@ -33,8 +33,14 @@ namespace Entity_FrameWork_Tutorial.Controllers
                 return NotFound();
             }
 
+            //var student = await _context.Students
+            //    .FirstOrDefaultAsync(m => m.ID == id);
             var student = await _context.Students
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Course)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (student == null)
             {
                 return NotFound();
@@ -54,13 +60,23 @@ namespace Entity_FrameWork_Tutorial.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,LastName,FirstMidName,EnrollmentDate")] Student student)
+        public async Task<IActionResult> Create([Bind("EnrollmentDate,FirstMidName,LastName")] Student student)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(student);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (DbUpdateException)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
             return View(student);
         }
@@ -86,7 +102,7 @@ namespace Entity_FrameWork_Tutorial.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,EnrollmentDate")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,EnrollmentDate,FirstMidName,LastName")] Student student)
         {
             if (id != student.ID)
             {
@@ -99,25 +115,21 @@ namespace Entity_FrameWork_Tutorial.Controllers
                 {
                     _context.Update(student);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentExists(student.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(student);
         }
 
         // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? saveChangesError = false)
         {
             if (id == null)
             {
@@ -125,10 +137,18 @@ namespace Entity_FrameWork_Tutorial.Controllers
             }
 
             var student = await _context.Students
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
                 return NotFound();
+            }
+
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewData["ErrorMessage"] =
+                    "Delete failed. Try again, and if the problem persists " +
+                    "see your system administrator.";
             }
 
             return View(student);
@@ -140,9 +160,21 @@ namespace Entity_FrameWork_Tutorial.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var student = await _context.Students.FindAsync(id);
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (student == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            try
+            {
+                _context.Students.Remove(student);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch(DbUpdateException)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+            }
         }
 
         private bool StudentExists(int id)
