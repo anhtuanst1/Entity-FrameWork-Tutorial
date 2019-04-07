@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Entity_FrameWork_Tutorial.Models;
+using System;
 using System.Linq;
-using Entity_FrameWork_Tutorial.Models;
 
 namespace Entity_FrameWork_Tutorial.Data
 {
-    public class DbInitializer
+    public static class DbInitializer
     {
         public static void Initialize(SchoolContext context)
         {

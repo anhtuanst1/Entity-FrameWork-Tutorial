@@ -17,7 +17,6 @@ namespace Entity_FrameWork_Tutorial
         public static void Main(string[] args)
         {
             //CreateWebHostBuilder(args).Build().Run();
-
             var host = CreateWebHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())

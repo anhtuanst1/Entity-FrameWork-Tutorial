@@ -9,6 +9,7 @@ namespace Entity_FrameWork_Tutorial.Models
         public string LastName { get; set; }
         public string FirstMidName { get; set; }
         public DateTime EnrollmentDate { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; } //Thuoc tinh Enrollments cua Student entity se chua tat ca Enrollment co lien quan den Student do.
+
+        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }
