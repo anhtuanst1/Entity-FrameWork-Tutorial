@@ -1,4 +1,7 @@
-﻿namespace Entity_FrameWork_Tutorial.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Entity_FrameWork_Tutorial.Models
 {
     public enum Grade
     {
@@ -10,6 +13,8 @@
         public int EnrollmentID { get; set; }
         public int CourseID { get; set; }
         public int StudentID { get; set; }
+
+        [DisplayFormat(NullDisplayText = "No grade")]
         public Grade? Grade { get; set; }
 
         public Course Course { get; set; }
