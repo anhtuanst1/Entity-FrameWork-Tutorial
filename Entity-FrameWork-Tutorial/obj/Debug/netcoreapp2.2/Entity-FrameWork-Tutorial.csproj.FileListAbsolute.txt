@@ -33,3 +33,4 @@ F:\Workspaces\Learn\Entity-FrameWork-Tutorial\Entity-FrameWork-Tutorial\obj\Debu
 F:\Workspaces\Learn\Entity-FrameWork-Tutorial\Entity-FrameWork-Tutorial\obj\Debug\netcoreapp2.2\Razor\Views\Students\Details.g.cshtml.cs
 F:\Workspaces\Learn\Entity-FrameWork-Tutorial\Entity-FrameWork-Tutorial\obj\Debug\netcoreapp2.2\Razor\Views\Students\Edit.g.cshtml.cs
 F:\Workspaces\Learn\Entity-FrameWork-Tutorial\Entity-FrameWork-Tutorial\obj\Debug\netcoreapp2.2\Razor\Views\Students\Index.g.cshtml.cs
+F:\Workspaces\Learn\Entity-FrameWork-Tutorial\Entity-FrameWork-Tutorial\obj\Debug\netcoreapp2.2\Razor\Views\Home\About.g.cshtml.cs
